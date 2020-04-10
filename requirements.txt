@@ -1,0 +1,4 @@
+numpy
+asyncio
+websockets
+pandas

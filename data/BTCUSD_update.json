@@ -1,0 +1,37 @@
+{
+    "jsonrpc": "2.0",
+    "method": "updateOrderbook",
+    "params": {    
+      "ask": [
+        {
+          "price": "1000",
+          "size": "0.000"
+        },
+        {
+          "price": "1020",
+          "size": "2"
+        },
+        {
+          "price": "1050",
+          "size": "3"
+        }
+      ],
+      "bid": [
+        {
+          "price": "980",
+           "size": "0.000"
+        },
+        {
+          "price": "990",
+           "size": "2"
+        },
+        {
+          "price": "900",
+           "size": "4"
+        }
+      ],
+      "symbol": "BTCUSD",
+      "sequence": 8073830,
+      "timestamp": "2018-11-19T05:00:28.700Z"
+    }
+  }

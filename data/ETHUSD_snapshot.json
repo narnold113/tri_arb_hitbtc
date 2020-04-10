@@ -1,0 +1,37 @@
+{
+    "jsonrpc": "2.0",
+    "method": "snapshotOrderbook",
+    "params": {
+      "ask": [
+        {
+          "price": "100",
+          "size": "2"
+        },
+        {
+          "price": "101",
+          "size": "1"
+        },
+        {
+          "price": "102",
+          "size": "4"
+        }
+      ],
+      "bid": [
+        {
+          "price": "99",
+          "size": "1"
+        },
+        {
+          "price": "98",
+          "size": "3"
+        },
+        {
+          "price": "97",
+          "size": "2"
+        }
+      ],
+      "symbol": "ETHUSD",
+      "sequence": 8073827,    
+      "timestamp": "2018-11-19T05:00:28.193Z"
+    }
+  }
