@@ -1,0 +1,45 @@
+{
+    "jsonrpc": "2.0",
+    "method": "updateOrderbook",
+    "params": {    
+      "ask": [
+        {
+          "price": "0.02",
+          "size": "0.000"
+        },
+        {
+          "price": "0.022",
+          "size": "2"
+        },
+        {
+          "price": "0.025",
+          "size": "3"
+        },
+        {
+          "price": "0.024",
+          "size": "3"
+        },
+        {
+          "price": "0.0234",
+          "size": "3"
+        }
+      ],
+      "bid": [
+        {
+          "price": "0.018",
+           "size": "0.000"
+        },
+        {
+          "price": "0.016",
+           "size": "5"
+        },
+        {
+          "price": "0.014",
+           "size": "4"
+        }
+      ],
+      "symbol": "ETHUSD",
+      "sequence": 8073830,
+      "timestamp": "2018-11-19T05:00:28.700Z"
+    }
+  }
