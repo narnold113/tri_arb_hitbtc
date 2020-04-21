@@ -4,49 +4,49 @@
     "params": {    
       "ask": [
         {
-          "price": "100",
+          "price": "120",
           "size": "0.000"
         },
         {
-          "price": "102",
+          "price": "122",
           "size": "2"
         },
         {
-          "price": "105",
+          "price": "125",
           "size": "3"
         },
         {
-          "price": "110",
+          "price": "121",
           "size": "3"
         },
         {
-          "price": "111",
+          "price": "131",
           "size": "0"
         },
         {
-          "price": "200",
+          "price": "150",
           "size": "3"
         },
         {
-          "price": "150",
+          "price": "160",
           "size": "10"
         },
         {
-          "price": "101",
+          "price": "121",
           "size": "0"
         }
       ],
       "bid": [
         {
-          "price": "98",
+          "price": "108",
            "size": "0.000"
         },
         {
-          "price": "99",
+          "price": "109",
            "size": "2"
         },
         {
-          "price": "90",
+          "price": "100",
            "size": "4"
         }
       ],

@@ -15,40 +15,40 @@ import json
 ### returns a list of dicts ###
 # btcusdRaw = readfile('dev/OrderBooks/BTCUSD_snapshot.json')
 
-class Orderbook:
-    def __init__(self, pair, orderbook, balance):
-        self.pair = pair
-        self.pair.ask = orderbook['ask']
-        self.pair.bid = orderbook['bid']
-        self.balance = balance
+# class Orderbook:
+#     def __init__(self, pair, orderbook, balance):
+#         self.pair = pair
+#         self.pair.ask = orderbook['ask']
+#         self.pair.bid = orderbook['bid']
+#         self.balance = balance
 
-    def getWeightedPrice(self, orders, reverse=False):
-        volume = 0
-        price = 0
-        wp = 0
-        remainder = 0
-        if reverse:
-            for order in orders:
-                volume += order[1]
-                wp += order[0] * (order[1] / balance)
-                if volume >= balance:
-                    remainder = volume - balance
-                    wp -= order[0] * (remainder / balance)
-                    return wp
-        else:
-            for order in orders:
-                volume += order[0] * order[1]
-                wp += order[0] * ((order[0] * order[1]) / balance)
-                if volume >= balance:
-                    remainder = volume - balance
-                    wp -= order[0] * (remainder / balance)
-                    return wp
+#     def getWeightedPrice(self, orders, reverse=False):
+#         volume = 0
+#         price = 0
+#         wp = 0
+#         remainder = 0
+#         if reverse:
+#             for order in orders:
+#                 volume += order[1]
+#                 wp += order[0] * (order[1] / balance)
+#                 if volume >= balance:
+#                     remainder = volume - balance
+#                     wp -= order[0] * (remainder / balance)
+#                     return wp
+#         else:
+#             for order in orders:
+#                 volume += order[0] * order[1]
+#                 wp += order[0] * ((order[0] * order[1]) / balance)
+#                 if volume >= balance:
+#                     remainder = volume - balance
+#                     wp -= order[0] * (remainder / balance)
+#                     return wp
     
-    def getBidWp(self, reverse=False):
-        return self.getWeightedPrice(self.bids, reverse)
+#     def getBidWp(self, reverse=False):
+#         return self.getWeightedPrice(self.bids, reverse)
     
-    def getAskWp(self, reverse=False):
-        return self.getWeightedPrice(self.ask, reverse)
+#     def getAskWp(self, reverse=False):
+#         return self.getWeightedPrice(self.ask, reverse)
 
 
 # class Orderbook:
@@ -83,31 +83,31 @@ class Orderbook:
 # print(btcusd.getAsksWp())
 
 
-# ethbtcBids = [[0.03, 10], [.025, 10], [.02, 10]]
+ethbtcBids = [[0.03, 10], [.025, 10], [.02, 10]]
 
-# def getWeightedPrice(orders, balance, reverse=False):
-#     volume = 0
-#     price = 0
-#     wp = 0
-#     remainder = 0
-#     if reverse:
-#         for order in orders:
-#             volume += order[1]
-#             wp += order[0] * (order[1] / balance)
-#             if volume >= balance:
-#                 remainder = volume - balance
-#                 wp -= order[0] * (remainder / balance)
-#                 return wp
-#     else:
-#         for order in orders:
-#             volume += order[0] * order[1]
-#             wp += order[0] * ((order[0] * order[1]) / balance)
-#             if volume >= balance:
-#                 remainder = volume - balance
-#                 wp -= order[0] * (remainder / balance)
-#                 return wp
+def getWeightedPrice(orders, balance, reverse=False):
+    volume = 0
+    price = 0
+    wp = 0
+    remainder = 0
+    if reverse:
+        for order in orders:
+            volume += order[1]
+            wp += order[0] * (order[1] / balance)
+            if volume >= balance:
+                remainder = volume - balance
+                wp -= order[0] * (remainder / balance)
+                return wp
+    else:
+        for order in orders:
+            volume += order[0] * order[1]
+            wp += order[0] * ((order[0] * order[1]) / balance)
+            if volume >= balance:
+                remainder = volume - balance
+                wp -= order[0] * (remainder / balance)
+                return wp
 
-# print(getWeightedPrice(ethbtcBids, 30, reverse=True))
+print(getWeightedPrice(ethbtcBids, 0.980392156862745, reverse=True))
 
 
 

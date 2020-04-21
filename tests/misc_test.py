@@ -92,33 +92,40 @@ ARBS = [
     # ,'EOS'
 ]
 
-pairs = []
-
+PAIRS = []
 for arb in ARBS:
-    pairs.append(arb + 'BTC')
-    pairs.append(arb + 'USD')
+    PAIRS.append(arb + 'USD')
+    PAIRS.append(arb + 'BTC')
+PAIRS.insert(0, 'BTCUSD')
+PAIRS.sort(reverse=True)
+print(PAIRS)
 
-pairs.insert(0, 'BTCUSD')
-# print(pairs)
 
-
-arbitrageBook = {
+arbitrage_book = {
     arb: {
-        'forward': {
-            'weightedPrices': {
-                pair: {} 
-                for pair in pairs if pair[:3] == arb or pair == 'BTCUSD'
-            },
-            'value': 0
+        'orderbooks': {
+            pair: {}
+            for pair in PAIRS if pair[:3] == arb
         },
-        'reverse': {
-            'weightedPrices': {
-                pair: {} 
-                for pair in pairs if pair[:3] == arb or pair == 'BTCUSD'
+        'regular': { ### Regular arbitrage order: buy BTC/USD, buy ALT/BTC and sell ALT/USD. For buys, we calculate weighted price on the "ask" side ###
+            'weighted_prices': {
+                pair: 0
+                for pair in PAIRS if pair[:3] == arb # or pair == 'BTCUSD'
             },
-            'value': 0
+            'triangle_value': 0
+        },
+        'reverse': { ### Reverse arbitrage order: buy ALT/USD, sell ALT/BTC and sell BTC/USD. For sells, we consume the "bid" side of the orderbook ###
+            'weighted_prices': {
+                pair: 0
+                for pair in PAIRS if pair[:3] == arb # or pair == 'BTCUSD'
+            },
+            'triangle_value': 0
         }
     }
     for arb in ARBS
 }
-# print(arbitrageBook)
+# print(arbitrage_book)
+
+for arb in ARBS:
+    pair = arb + 'BTC'
+    print(arbitrage_book[arb]['regular']['weighted_prices'][arb + 'BTC'])
