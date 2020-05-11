@@ -2,7 +2,8 @@ import mysql.connector
 from datetime import datetime
 from mysql.connector import Error
 from mysql.connector import errorcode
-from database_readconfig import read_config
+from configparser import ConfigParser
+
 
 ARBS = [
     'ETH',
@@ -10,63 +11,62 @@ ARBS = [
     'XRP',
     'BCH'
 ]
-DB_NAME = 'crypto_triangle'
 
 TABLES = {}
 
-for arb in ARBS:
-    TABLES[arb] = "CREATE TABLE {} (timestamp TIMESTAMP NOT NULL, regular DECIMAL(11,10) NOT NULL, reverse DECIMAL(11,10) NOT NULL) ENGINE=InnoDB".format(arb)
-    # """
-    #     CREATE TABLE {} (
-    #         timestamp TIMESTAMP NOT NULL,
-    #         regular DECIMAL(11,10) NOT NULL,
-    #         reverse DECIMAL(11,10) NOT NULL
-    #     ) ENGINE=InnoDB
-    # """
+def read_config(filename='config.ini', section='mariadb'):
+    parser = ConfigParser()
+    parser.read(filename)
 
-        # "CREATE TABLE {} (".format(arb)
-        # "timestamp TIMESTAMP NOT NULL,"
-        # "regular DECIMAL(11,10) NULL,"
-        # "reverse DECIMAL(11,10)"
-        # ") ENGINE=InnoDB"
-
-# print(TABLES)
+    db = {}
+    if parser.has_section(section):
+        items = parser.items(section)
+        for item in items:
+            db[item[0]] = item[1]
+    else:
+        raise Exception('{0} not found in the {1} file'.format(section, filename))
+    return db
 
 def connect():
     conn = None
     try:
         conn = mysql.connector.connect(**read_config())
         if conn.is_connected():
-            print('Connected to MySQL database')
+            print('Connected to MariaDB')
         
         cursor = conn.cursor()
-
-        try:
-            cursor.execute("USE {}".format(DB_NAME))
-            print('Using {} DB'.format(DB_NAME))
-        except:
-            print('DB {} does not exist'.format(DB_NAME))
-        
-        for table_name in TABLES:
-            table_description = TABLES[table_name]
-            print('Creating table {}: '.format(table_name), end='')
+        for arb in ARBS:
+            table_creation = str(
+                "CREATE TABLE {} ("
+                "timestamp DATETIME(3) NOT NULL,"
+                "regular1 DECIMAL(11,10) NULL,"
+                "reverse1 DECIMAL(11,10) NULL,"
+                "regular10 DECIMAL(11,10) NULL,"
+                "reverse10 DECIMAL(11,10) NULL,"
+                "regular25 DECIMAL(11,10) NULL,"
+                "reverse25 DECIMAL(11,10) NULL,"
+                "regular50 DECIMAL(11,10) NULL,"
+                "reverse50 DECIMAL(11,10) NULL"
+                ") ENGINE=InnoDB".format(arb)
+            )
+            print('Creating table {}: '.format(arb), end='')
             try:
-                cursor.execute(table_description)
+                cursor.execute(table_creation)
             except Error as err:
                 if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
                     print("already exists.")
                 else:
                     print(err.msg)
-            else: 
+            else:
                 print('OK')
-
     except Error as e:
         print(e)
-
     finally:
         if conn is not None and conn.is_connected():
             conn.close()
+            print('Disconnected from MariaDB')
 
 
 if __name__ == '__main__':
     connect()
+    print(datetime.now())

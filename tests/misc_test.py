@@ -85,47 +85,266 @@
 
 
 
-ARBS = [
-    'ETH'
-    ,'LTC'
-    # ,'XRP'
-    # ,'EOS'
-]
+# ARBS = [
+#     'ETH'
+#     ,'LTC'
+#     # ,'XRP'
+#     # ,'EOS'
+# ]
 
-PAIRS = []
-for arb in ARBS:
-    PAIRS.append(arb + 'USD')
-    PAIRS.append(arb + 'BTC')
-PAIRS.insert(0, 'BTCUSD')
-PAIRS.sort(reverse=True)
-print(PAIRS)
+# PAIRS = []
+# for arb in ARBS:
+#     PAIRS.append(arb + 'USD')
+#     PAIRS.append(arb + 'BTC')
+# PAIRS.insert(0, 'BTCUSD')
+# PAIRS.sort(reverse=True)
+# print(PAIRS)
 
 
-arbitrage_book = {
-    arb: {
-        'orderbooks': {
-            pair: {}
-            for pair in PAIRS if pair[:3] == arb
-        },
-        'regular': { ### Regular arbitrage order: buy BTC/USD, buy ALT/BTC and sell ALT/USD. For buys, we calculate weighted price on the "ask" side ###
-            'weighted_prices': {
-                pair: 0
-                for pair in PAIRS if pair[:3] == arb # or pair == 'BTCUSD'
-            },
-            'triangle_value': 0
-        },
-        'reverse': { ### Reverse arbitrage order: buy ALT/USD, sell ALT/BTC and sell BTC/USD. For sells, we consume the "bid" side of the orderbook ###
-            'weighted_prices': {
-                pair: 0
-                for pair in PAIRS if pair[:3] == arb # or pair == 'BTCUSD'
-            },
-            'triangle_value': 0
-        }
-    }
-    for arb in ARBS
-}
-# print(arbitrage_book)
+# arbitrage_book = {
+#     arb: {
+#         'orderbooks': {
+#             pair: {}
+#             for pair in PAIRS if pair[:3] == arb
+#         },
+#         'regular': { ### Regular arbitrage order: buy BTC/USD, buy ALT/BTC and sell ALT/USD. For buys, we calculate weighted price on the "ask" side ###
+#             'weighted_prices': {
+#                 pair: 0
+#                 for pair in PAIRS if pair[:3] == arb # or pair == 'BTCUSD'
+#             },
+#             'triangle_value': 0
+#         },
+#         'reverse': { ### Reverse arbitrage order: buy ALT/USD, sell ALT/BTC and sell BTC/USD. For sells, we consume the "bid" side of the orderbook ###
+#             'weighted_prices': {
+#                 pair: 0
+#                 for pair in PAIRS if pair[:3] == arb # or pair == 'BTCUSD'
+#             },
+#             'triangle_value': 0
+#         }
+#     }
+#     for arb in ARBS
+# }
+# # print(arbitrage_book)
 
-for arb in ARBS:
-    pair = arb + 'BTC'
-    print(arbitrage_book[arb]['regular']['weighted_prices'][arb + 'BTC'])
+# for arb in ARBS:
+#     for pair in sorted(arbitrage_book[arb]['orderbooks'], reverse=True):
+#         print(pair)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ARBS = [
+#     'ETH'
+#     ,'LTC'
+#     ,'XRP'
+#     ,'EOS'
+# ]
+# # tables = {}
+
+# # for arb in ARBS:
+# #     tables[arb] = str(
+# #         "CREATE TABLE {} "
+# #         "TEST"
+# #     )
+
+# # print(tables)
+
+# time = '2019-01-01'
+
+# for arb in ARBS:
+#     data = [arb, time, 0.02, -0.02, .015, -0.015, 0.01, -0.01]
+#     # print(data)
+#     query = str(
+#         "INSERT INTO {0} "
+#         "VALUES ({1}, {2}, {3}, {4}, {5}, {6}, {7})".format(*data)
+#     )
+#     print(query)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# from datetime import datetime
+# import numpy as np
+# startTime = datetime.now()
+# osize=60001
+# usize=1000
+# dtype=[('price', 'f4'), ('size', 'f4')]
+
+# # xx = np.array([[100, 5],[200, 1],[300, 2],[400, 2],[500, 3]])
+# # yy = np.array([[200, 0],[300, 0],[400, 1],[600,5]])
+
+# oprice = np.random.randint(7001, size=osize)
+# oquantity = np.random.randint(51, size=osize)
+# btc_orderbook = np.column_stack((oprice,oquantity))
+# # btc_orderbook = np.array(btc_orderbook, dtype=dtype)
+# print(btc_orderbook[0])
+# uprice = np.random.randint(7001, size=usize)
+# uquantity = np.random.randint(60, size=usize)
+# update_orders = np.column_stack((uprice,uquantity))
+# # print(updateOrders)
+
+
+
+# # btc_orderbook = np.array([(101, 1), (102, 2), (103, 3), (104, 4), (105, 5), (106, 6)], dtype=[('price', 'f4'), ('size', 'f4')])
+# # update_orders = np.array([(101, 2), (102, 0), (103, 1), (106, 10), (107, 7), (108,8)], dtype=[('price', 'f4'), ('size', 'f4')])
+
+# # inter, orders_ind, updateorders_ind = np.intersect1d(btc_orderbook['price'], update_orders['price'], return_indices=True)
+# # btc_orderbook[orders_ind] = update_orders[updateorders_ind]
+
+# # notin_ind = np.in1d(update_orders['price'], btc_orderbook['price'],invert=True)
+# # btc_orderbook = np.append(btc_orderbook, update_orders[notin_ind], axis=0)
+
+# # delete_ind = np.where(btc_orderbook['size'] == 0)[0]
+# # btc_orderbook = np.delete(btc_orderbook, delete_ind, axis=0)
+
+# # print(btc_orderbook)
+
+# # btc_orderbook = np.array([[101, 1], [102, 2], [103, 3], [104, 4], [105, 5], [106, 6]])
+# # update_orders = np.array([[101, 2], [102, 0], [103, 1], [106, 10], [107, 7], [108,8], [99,1]])
+
+# inter, orders_ind, updateorders_ind = np.intersect1d(btc_orderbook[:,0], update_orders[:,0], return_indices=True)
+# btc_orderbook[orders_ind] = update_orders[updateorders_ind]
+
+# notin_ind = np.in1d(update_orders[:,0], btc_orderbook[:,0], invert=True)
+# btc_orderbook = np.append(btc_orderbook, update_orders[notin_ind], axis=0)
+
+# delete_ind = np.where(btc_orderbook == 0)[0]
+# btc_orderbook = np.delete(btc_orderbook, delete_ind, axis=0)
+
+# btc_orderbook = btc_orderbook[btc_orderbook[:,0].argsort()[::-1]]
+
+# print(btc_orderbook)
+
+
+
+
+
+
+# # notind = np.in1d(updateOrders[:,0], orders[:,0], invert=True)
+# # orders = np.append(orders, updateOrders[notind], axis=0)
+
+# # inter, orders_ind, updateOrders_ind = np.intersect1d(orders[:,0], updateOrders[:,0], return_indices=True)
+# # orders[orders_ind] = updateOrders[updateOrders_ind]
+
+# # delind = np.where(orders == 0)[0]
+# # orders = np.delete(orders, delind, axis = 0)
+
+# # print(orders)
+
+
+
+
+# # for ui, updateItem in enumerate(updateOrders):
+# #     for oi, orderItem in enumerate(orders):
+# #         if updateItem[0] == orderItem[0]:
+# #             if updateItem[1] != 0:
+# #                 orders[oi][1] = updateItem[1]
+# #                 break
+# #             else:
+# #                 orders = np.delete(orders, oi, axis=0)
+# #                 break            
+# #         else:
+# #             continue
+# #     if updateItem[0] not in orders[:,0] and updateItem[1] != 0:
+# #         orders = np.append(orders, [updateItem], axis=0)
+# #     else:
+# #         continue
+
+# # print(orders)
+
+# print(datetime.now() - startTime)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import numpy as np
+
+
+
+
+### regular arb (Buy btcusd, buy ethbtc, sell ethusd) ###
+btcusd = [7000, 7050, 7100] # x
+ethusd = [210, 209, 208] # y
+ethbtc = [0.032, 0.0323, 0.0325] # z
+reg_arb_price = [x * z for x,z in zip(btcusd, ethbtc)]
+reg_tri_value = [(y - rap) / rap for y,rap in zip(ethusd,reg_arb_price)]
+
+# print(reg_arb_price)
+# print(reg_tri_value)
+
+
+### reverse arb (Sell btcusd, sell ethbtc, buy ethusd) ###
+btcusd = np.array([6990, 6950, 6900]) # x
+ethusd = np.array([211, 212, 213]) # y
+ethbtc = np.array([0.032, 0.0317, 0.0315]) # z
+rev_arb_price = np.array([x / z for x,z in zip(ethusd, ethbtc)])
+rev_tri_value = np.array([(y - rap) / rap for y,rap in zip(btcusd,rev_arb_price)])
+
+xx = rev_tri_value * 100
+# xx = [100 * yy for yy in rev_tri_value]
+# print(reg_arb_price)
+print(xx)
