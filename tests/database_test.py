@@ -39,14 +39,14 @@ def connect():
             table_creation = str(
                 "CREATE TABLE {} ("
                 "timestamp DATETIME(3) NOT NULL,"
-                "regular1 DECIMAL(11,10) NULL,"
-                "reverse1 DECIMAL(11,10) NULL,"
-                "regular10 DECIMAL(11,10) NULL,"
-                "reverse10 DECIMAL(11,10) NULL,"
-                "regular25 DECIMAL(11,10) NULL,"
-                "reverse25 DECIMAL(11,10) NULL,"
-                "regular50 DECIMAL(11,10) NULL,"
-                "reverse50 DECIMAL(11,10) NULL"
+                "regular1 DECIMAL(7,6) NULL,"
+                "reverse1 DECIMAL(7,6) NULL,"
+                "regular10 DECIMAL(7,6) NULL,"
+                "reverse10 DECIMAL(7,6) NULL,"
+                "regular25 DECIMAL(7,6) NULL,"
+                "reverse25 DECIMAL(7,6) NULL,"
+                "regular50 DECIMAL(7,6) NULL,"
+                "reverse50 DECIMAL(7,6) NULL"
                 ") ENGINE=InnoDB".format(arb)
             )
             print('Creating table {}: '.format(arb), end='')
@@ -59,6 +59,16 @@ def connect():
                     print(err.msg)
             else:
                 print('OK')
+        
+        data = (datetime.now(), 1, 2, 3, 4, 5, 6, 7, 8)
+        insert_statement = str(
+            "INSERT INTO {} "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)".format('ETH')
+        )
+        cursor.execute(insert_statement, data)
+        conn.commit()
+        cursor.close
+
     except Error as e:
         print(e)
     finally:

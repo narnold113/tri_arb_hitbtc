@@ -321,30 +321,151 @@
 
 
 
+# import numpy as np
+
+
+
+
+# ### regular arb (Buy btcusd, buy ethbtc, sell ethusd) ###
+# btcusd = [7000, 7050, 7100] # x
+# ethusd = [210, 209, 208] # y
+# ethbtc = [0.032, 0.0323, 0.0325] # z
+# reg_arb_price = [x * z for x,z in zip(btcusd, ethbtc)]
+# reg_tri_value = [(y - rap) / rap for y,rap in zip(ethusd,reg_arb_price)]
+
+# # print(reg_arb_price)
+# # print(reg_tri_value)
+
+
+# ### reverse arb (Sell btcusd, sell ethbtc, buy ethusd) ###
+# btcusd = np.array([6990, 6950, 6900]) # x
+# ethusd = np.array([211, 212, 213]) # y
+# ethbtc = np.array([0.032, 0.0317, 0.0315]) # z
+# rev_arb_price = np.array([x / z for x,z in zip(ethusd, ethbtc)])
+# rev_tri_value = np.array([(y - rap) / rap for y,rap in zip(btcusd,rev_arb_price)])
+
+# xx = rev_tri_value * 100
+# # xx = [100 * yy for yy in rev_tri_value]
+# # print(reg_arb_price)
+# print(xx)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# from datetime import datetime
+# startTime = datetime.now()
+
+# pairs = ['btc', 'eth', 'bch']
+# update_list = ['btc', 'btc', 'btc', 'eth', 'ltc', 'bch']
+
+
+# not_full = True
+# while not_full:
+#     try:
+#         check = all(item in update_list for item in pairs)
+#         if check:
+#             print(datetime.now() - startTime)
+#             print('Update list contains all items in PAIRS')
+#             # not_full = False
+#             break
+#         else:
+#             pass
+#     except:
+#         print('There was an error')
+#     else:
+#         # print('Not yet')
+#         continue
+# # check = all(item in update_list for item in pairs)
+# # print(check)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# regular = [1,3,5]
+# arb_data = regular
+# reverse = [2,4,6]
+
+# # for i, item in enumerate(y):
+# #     x.insert(i+1, item)
+# # print(x)
+
+# i=1
+# for item in reverse:
+#     arb_data.insert(i, item)
+#     i+=2
+# print(tuple(arb_data))
+
+
+# # z = x+y
+# # print(z)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import numpy as np
 
-
-
-
-### regular arb (Buy btcusd, buy ethbtc, sell ethusd) ###
-btcusd = [7000, 7050, 7100] # x
-ethusd = [210, 209, 208] # y
-ethbtc = [0.032, 0.0323, 0.0325] # z
-reg_arb_price = [x * z for x,z in zip(btcusd, ethbtc)]
-reg_tri_value = [(y - rap) / rap for y,rap in zip(ethusd,reg_arb_price)]
-
-# print(reg_arb_price)
-# print(reg_tri_value)
-
-
-### reverse arb (Sell btcusd, sell ethbtc, buy ethusd) ###
-btcusd = np.array([6990, 6950, 6900]) # x
-ethusd = np.array([211, 212, 213]) # y
-ethbtc = np.array([0.032, 0.0317, 0.0315]) # z
-rev_arb_price = np.array([x / z for x,z in zip(ethusd, ethbtc)])
-rev_tri_value = np.array([(y - rap) / rap for y,rap in zip(btcusd,rev_arb_price)])
-
-xx = rev_tri_value * 100
-# xx = [100 * yy for yy in rev_tri_value]
-# print(reg_arb_price)
-print(xx)
+x = np.array([8001.5748393384, 8002.05182], np.float64)
+print(x)
+# print(type(x[0].item()))

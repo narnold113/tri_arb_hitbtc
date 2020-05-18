@@ -1,5 +1,6 @@
 env
-venv
+.env
 __pycache__
 .vscode
 config.ini
+.gitignore

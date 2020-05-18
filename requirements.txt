@@ -1,4 +1,4 @@
 numpy
 asyncio
 websockets
-pandas
+mysql-connector

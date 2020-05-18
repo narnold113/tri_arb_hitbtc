@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+import numpy as np
 # balances = [100, 300, 600]
 # orderbook = [[100, 1], [200, 1], [300,1], [400,1]]
 
@@ -27,10 +28,12 @@ def getWeightedPrice(orders, balance, reverse=False):
                     wp -= order[0] * (remainder / bal)
                     weightedPrices.append(wp)
                     break
-    return weightedPrices
+    return np.array(weightedPrices, np.float64)
 
 # res = getWeightedPrice(orderbook, balances, reverse=False)
 # print(res)
+# print(type(res))
+# print(res.dtype)
 
 
 def read_db_config(filename='config.ini', section='mariadb'):
