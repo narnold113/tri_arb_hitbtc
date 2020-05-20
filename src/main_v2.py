@@ -171,7 +171,7 @@ async def populateArbValues():
             print('Connection to Mariadb initiated in populateArbValues function')
         while 1:
             try:
-                await asyncio.sleep(3)
+                await asyncio.sleep(2)
                 for side in SIDES:
                     if side in btc_book['orderbook']:
                         if side == 'ask':
