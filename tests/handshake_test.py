@@ -74,24 +74,25 @@ async def subscribeToBook(pair, i=-1) -> None:
     params['id'] = random.randrange(1000)
     try:
         async with websockets.client.connect(url) as websocket:
-            await websocket.send(str(params).replace('\'', '"'))
+            # await websocket.send(str(params).replace('\'', '"'))
             while 1:
                 res = await websocket.recv()
                 await dataDirector(res)
     except websockets.exceptions.InvalidStatusCode as isc:
-        i += 1
-        if i == 0:
-            print('Waiting 30 seconds to retry the connection for', pair)
-            await asyncio.sleep(30)
-            await subscribeToBook(pair, i=i)
-        elif i in range(1,5):
-            print('Waiting 60 seconds to retry the connection for', pair)
-            await asyncio.sleep(60)
-            await subscribeToBook(pair, i=i)
-        else:
-            print('Waiting 120 seconds to retry the connection for', pair)
-            await asyncio.sleep(120)
-            await subscribeToBook(pair, i=i)
+        print(isc)
+        # i += 1
+        # if i == 0:
+        #     print('Waiting 30 seconds to retry the connection for', pair)
+        #     await asyncio.sleep(30)
+        #     await subscribeToBook(pair, i=i)
+        # elif i in range(1,5):
+        #     print('Waiting 60 seconds to retry the connection for', pair)
+        #     await asyncio.sleep(60)
+        #     await subscribeToBook(pair, i=i)
+        # else:
+        #     print('Waiting 120 seconds to retry the connection for', pair)
+        #     await asyncio.sleep(120)
+        #     await subscribeToBook(pair, i=i)
 
 async def main() -> None:
     coroutines = [

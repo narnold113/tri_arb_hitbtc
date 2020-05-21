@@ -464,8 +464,8 @@
 
 
 
-import numpy as np
+# import numpy as np
 
-x = np.array([8001.5748393384, 8002.05182], np.float64)
-print(x)
-# print(type(x[0].item()))
+# x = np.array([8001.5748393384, 8002.05182], np.float64)
+# print(x)
+# # print(type(x[0].item()))

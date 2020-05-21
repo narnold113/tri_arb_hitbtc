@@ -8,12 +8,19 @@ import helper
 import mysql.connector
 import random
 import time
+import sys
 from datetime import datetime
 from mysql.connector import Error
 from mysql.connector import errorcode
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('tri_arb_hitbtc')
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logHandler = logging.FileHandler('tri_arb_hitbtc.log', mode='a')
+logHandler.setLevel(logging.INFO)
+logHandler.setFormatter(formatter)
+logger.addHandler(logHandler)
+
 
 balances = [1_000, 10_000, 25_000, 50_000]
 
@@ -39,9 +46,6 @@ for arb in ARBS:
     PAIRS.append(arb + 'BTC')
 PAIRS.insert(0, 'BTCUSD')
 # print(PAIRS)
-
-update_list = []
-build_list = []
 
 btc_book = {
     'orderbook': {
@@ -79,7 +83,8 @@ arbitrage_book = {
     }
     for arb in ARBS
 }
-async def dataDirector(res, pair):
+
+async def streamDirector(res, pair):
     res = json.loads(res)
     if 'params' in res: # Filter initial status messages
         if res['method'] == 'snapshotOrderbook':
@@ -89,8 +94,9 @@ async def dataDirector(res, pair):
     else:
         pass
 
-
-async def buildBook(res, pair):
+### These two functions handle the orderbooks ###
+build_list = []
+async def buildBook(res, pair): ### Build the orderbooks using the snapshot data sent by the ws ###
     global btc_book
     global arbitrage_book
     global build_list
@@ -113,14 +119,10 @@ async def buildBook(res, pair):
 async def updateBook(res, pair):
     global btc_book
     global arbitrage_book
-    global update_list
     updatebook = {
         side: {}
         for side in SIDES
     }
-    update_list.append(pair)
-    # print(pair)
-    # print(res)
     try:
 
         for side in SIDES:
@@ -158,7 +160,7 @@ async def updateBook(res, pair):
 
                 arbitrage_book[arb]['orderbooks'][pair][side] = arb_ob
     except Exception:
-        tb.print_exc
+        logger.exception()
 
 async def populateArbValues():
     global arbitrage_book
@@ -233,27 +235,28 @@ async def populateArbValues():
                             conn.commit()
                             cursor.close()
                         except Error as err:
-                            print('In the cursor.execute try')
-                            print(err.msg)
+                            logger.info('In the cursor.execute populateArbValuestry')
+                            # print(err.msg)
+                            logger.info(err.msg)
                     except Exception:
-                        tb.print_exc()
+                        # tb.print_exc()
+                        logger.exception()
             except Exception:
-                tb.print_exc()
+                # tb.print_exc()
+                logger.exception()
                 break
     except Error as err:
-        print(err.msg)
+        # print(err.msg)
+        logger.info(err.msg)
     finally:
         if conn is not None and conn.is_connected():
             conn.close()
-            print('Disconnected from MariaDB')
 
 
 async def createSqlTables():
     conn = None
     try:
         conn = mysql.connector.connect(user='python', password='python', host='127.0.0.1', database='tri_arb_hitbtc')
-        if conn.is_connected():
-            print('Connected to Mariadb')
         cursor = conn.cursor()
 
         for arb in ARBS:
@@ -272,18 +275,13 @@ async def createSqlTables():
             )
             try:
                 cursor.execute(table_creation)
-                print('Successfully created table for ', arb)
             except Error as err:
-                if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                    print("already exists.")
-                else:
-                    print(err.msg)
+                logger.info(err.msg)
     except Error as e:
-        print(e)
+        logger.info(e.msg)
     finally:
         if conn is not None and conn.is_connected():
             conn.close()
-            print('Disconnected from MariaDB')
   
 async def printBook():
     global arbitrage_book
@@ -297,19 +295,18 @@ async def printBook():
         else:
             pass
 
-async def fullBookTimer():
-    global update_list
+async def fullBookTimer(): ### This function checks for initiated orderbooks. Once all have been initiated, start populateArbValues ###
     global build_list
     start_time = datetime.now()
 
     while 1:
         await asyncio.sleep(1)
-        print(build_list)
+        # print(build_list)
         try:
             check = all(item in build_list for item in PAIRS)
             if check:
-                print('Build list contains all items in PAIRS. It took', datetime.now() - start_time, 'seconds')
-                print('Starting the Populate function...')
+                # print('Build list contains all items in PAIRS. It took', datetime.now() - start_time, 'seconds')
+                # print('Starting the Populate function...')
                 await populateArbValues()
                 break
             else:
@@ -319,7 +316,7 @@ async def fullBookTimer():
         else:
             continue
 
-async def subscribeToBook(pair, i=-1) -> None:
+async def subscribeToBook(pair) -> None:
     url='wss://api.hitbtc.com/api/2/ws'
     strParams = '''{"method": "subscribeOrderbook","params": {"symbol": "placeholder"},"id": "placeholder"}'''
     params = json.loads(strParams)
@@ -332,24 +329,19 @@ async def subscribeToBook(pair, i=-1) -> None:
         async with websockets.client.connect(url) as websocket:
             await websocket.send(str(params).replace('\'', '"'))
             while 1:
-                res = await websocket.recv()
-                await dataDirector(res, pair)
-    except websockets.exceptions.InvalidStatusCode as isc:
-        i += 1
-        if i == 0:
-            print('Waiting 30 seconds to retry the connection for', pair)
-            await asyncio.sleep(30)
-            await subscribeToBook(pair, i=i)
-        elif i in range(1,5):
-            print('Waiting 60 seconds to retry the connection for', pair)
-            await asyncio.sleep(60)
-            await subscribeToBook(pair, i=i)
-        else:
-            print('Waiting 120 seconds to retry the connection for', pair)
-            await asyncio.sleep(120)
-            await subscribeToBook(pair, i=i)
+                try:
+                    res = await websocket.recv()
+                    await streamDirector(res, pair)
+                except websockets.exception.ConnectionClosed as cc:
+                    logger.info(cc)
+                    sys.exit()
+    except websockets.exceptions.InvalidStatusCode as isc: ### Recursion. If the ws server receives too many requests, it throws a rate limit error ###
+        logger.info('Waiting 60 seconds to retry the connection for', pair)
+        await asyncio.sleep(90)
+        await subscribeToBook(pair)
     except Exception:
         tb.print_exc
+        
 
 async def main() -> None:
     coroutines = [
@@ -357,9 +349,7 @@ async def main() -> None:
         for pair in PAIRS
     ]
     coroutines.append(fullBookTimer())
-    # coroutines = []
     coroutines.append(createSqlTables())
-    # coroutines.append(sqlHandler())
     await asyncio.wait(coroutines)
 
 

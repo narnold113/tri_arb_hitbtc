@@ -4,3 +4,5 @@ __pycache__
 .vscode
 config.ini
 .gitignore
+tests
+*.log
