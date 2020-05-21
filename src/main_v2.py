@@ -170,7 +170,7 @@ async def populateArbValues():
     try:
         conn = mysql.connector.connect(user='python', password='python', host='127.0.0.1', database='tri_arb_hitbtc')
         if conn.is_connected():
-            print('Connection to Mariadb initiated in populateArbValues function')
+            logger.info('Connection to Mariadb initiated in populateArbValues function')
         while 1:
             try:
                 await asyncio.sleep(2)
@@ -235,7 +235,7 @@ async def populateArbValues():
                             conn.commit()
                             cursor.close()
                         except Error as err:
-                            logger.info('In the cursor.execute populateArbValuestry')
+                            logger.info('In the cursor.execute populateArbValues try')
                             # print(err.msg)
                             logger.info(err.msg)
                     except Exception:
@@ -328,6 +328,7 @@ async def subscribeToBook(pair) -> None:
     try:
         async with websockets.client.connect(url) as websocket:
             await websocket.send(str(params).replace('\'', '"'))
+            logger.info('Successfully connected to ws for %s', pair)
             while 1:
                 try:
                     res = await websocket.recv()
@@ -336,7 +337,7 @@ async def subscribeToBook(pair) -> None:
                     logger.info(cc)
                     sys.exit()
     except websockets.exceptions.InvalidStatusCode as isc: ### Recursion. If the ws server receives too many requests, it throws a rate limit error ###
-        logger.info('Waiting 60 seconds to retry the connection for', pair)
+        logger.info('Waiting 90 seconds to retry the connection for %s', pair)
         await asyncio.sleep(90)
         await subscribeToBook(pair)
     except Exception:
