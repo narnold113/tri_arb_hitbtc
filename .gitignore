@@ -1,5 +1,5 @@
 env
-.env
+env_hitbtc
 __pycache__
 .vscode
 config.ini
