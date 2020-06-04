@@ -375,7 +375,7 @@ async def subscribeToBook(pair) -> None:
                 try:
                     res = await websocket.recv()
                     await streamDirector(res, pair)
-                except websockets.exception.ConnectionClosed as cc:
+                except websockets.exceptions.ConnectionClosed as cc:
                     logger.exception(cc)
                     sys.exit()
     except websockets.exceptions.InvalidStatusCode as isc: ### Recursion. If the ws server receives too many requests, it throws a rate limit error ###
