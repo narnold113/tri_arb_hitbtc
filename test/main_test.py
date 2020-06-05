@@ -368,7 +368,7 @@ async def subscribeToBook(pair) -> None:
         params['params']['symbol'] = pair
     params['id'] = random.randrange(1000)
     try:
-        async with websockets.client.connect(url) as websocket:
+        async with websockets.client.connect(url, ping_interval=None, ping_timeout=None, max_queue=None) as websocket:
             await websocket.send(str(params).replace('\'', '"'))
             logger.info('Successfully connected to ws for %s', pair)
             while 1:

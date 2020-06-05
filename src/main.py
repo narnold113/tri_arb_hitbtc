@@ -309,7 +309,7 @@ async def arbMonitor():
                 if len(threshold_keep[arb][type]) >= 1:
                     try:
                         conn = mysql.connector.connect(user='python', password='python', host='127.0.0.1', database='tri_arb_hitbtc')
-                        log_msg = arb + ' for type ' + type + ' has over 3 length. Inserting records now.'
+                        log_msg = arb + ' for type ' + type + ' has over 1 length. Inserting records now.'
                         logger.info(log_msg)
                         for dct in threshold_keep[arb][type]:
                             insert_values = list(dct.values())
@@ -366,6 +366,8 @@ async def printBook():
 async def stillAlive():
     while 1:
         await asyncio.sleep(1800)
+        log_message = 'The arb rate for ETH regular is ' + arbitrage_book['ETH']['regular']['triangle_values']
+        logger.info(log_message)
         logger.info('Still alive?')
 
 async def subscribeToBook(pair) -> None:
@@ -378,7 +380,7 @@ async def subscribeToBook(pair) -> None:
         params['params']['symbol'] = pair
     params['id'] = random.randrange(1000)
     try:
-        async with websockets.client.connect(url) as websocket:
+        async with websockets.client.connect(url, ping_interval=None, ping_timeout=None, max_queue=None) as websocket:
             await websocket.send(str(params).replace('\'', '"'))
             logger.info('Successfully connected to ws for %s', pair)
             while 1:
